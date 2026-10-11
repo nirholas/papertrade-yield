@@ -26,13 +26,22 @@
     "hyperevm",
     "hyperliquid",
     "usdc",
-    "defi"
+    "defi",
+    "paper-token",
+    "apy",
+    "yield-dashboard",
+    "perps",
+    "cloudflare-pages",
+    "typescript",
+    "crypto",
+    "web3",
+    "passive-income"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nirholas/papertrade-yield.git"
   },
-  "homepage": "https://github.com/nirholas/papertrade-yield#readme",
+  "homepage": "https://papertrade-yield.pages.dev",
   "bugs": {
     "url": "https://github.com/nirholas/papertrade-yield/issues"
   },
