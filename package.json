@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Unofficial PAPER staking and yield dashboard for Papertrade (papertrade.xyz): protocol view, mint curve, realized USDC reward history from PaperStaking events, wallet view and wallet-signed stake, unstake, claim and distribute actions.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "author": "nirholas",
   "type": "module",
   "engines": {

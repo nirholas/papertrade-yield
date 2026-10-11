@@ -60,4 +60,4 @@ npm run build:site && cd site && npx wrangler pages deploy
 
 ## License
 
-MIT, 2026, nirholas. Unofficial and not affiliated with Papertrade. High leverage can lose your whole margin.
+Apache-2.0, 2026, nirholas. Unofficial and not affiliated with Papertrade. High leverage can lose your whole margin.

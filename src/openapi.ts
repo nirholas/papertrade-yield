@@ -9,7 +9,7 @@ export const OPENAPI = {
     summary: 'PAPER staking and yield data for Papertrade (unofficial).',
     description:
       'Read-only JSON over public Papertrade and HyperEVM data. Unofficial and not affiliated with Papertrade. Yield is quoted as USDC per 1M PAPER per day because PAPER has no market price.',
-    license: { name: 'MIT', identifier: 'MIT' },
+    license: { name: 'Apache-2.0', identifier: 'Apache-2.0' },
   },
   servers: [{ url: 'https://papertrade-yield.pages.dev' }],
   paths: {
