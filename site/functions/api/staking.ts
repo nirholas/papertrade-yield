@@ -3,14 +3,12 @@
  * Combines the public Papertrade API (protocol summary, trading state, hourly
  * history) with an on-chain read of PaperStaking. Cached at the edge for 60 s.
  */
-import { buildSnapshot, type ChainState } from '../../../src/snapshot';
-import { stakingChainState } from '../../../src/rpc';
+import { loadSnapshot } from '../../../src/data';
 
 interface Env {
   PAPERTRADE_API_URL?: string;
 }
 
-const UPSTREAM = 'https://exchange.papertrade.xyz';
 const CACHE_SECONDS = 60;
 
 const JSON_HEADERS = {
@@ -29,21 +27,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, waitUntil
   const hit = await cache.match(cacheKey);
   if (hit) return hit;
 
-  const base = (env.PAPERTRADE_API_URL ?? UPSTREAM).replace(/\/+$/, '');
-  const get = async <T>(path: string): Promise<T> => {
-    const res = await fetch(`${base}${path}`, { headers: { accept: 'application/json', 'x-papertrade-build': 'papertrade-yield' } });
-    if (!res.ok) throw new Error(`${path} returned HTTP ${res.status}`);
-    return (await res.json()) as T;
-  };
-
   try {
-    const [summary, trading, history, chain] = await Promise.all([
-      get<Parameters<typeof buildSnapshot>[0]['summary']>('/query/protocol/summary'),
-      get<Parameters<typeof buildSnapshot>[0]['trading']>('/state/trading'),
-      get<Parameters<typeof buildSnapshot>[0]['history']>('/query/protocol/history?interval=1h'),
-      stakingChainState().catch((): ChainState | null => null),
-    ]);
-    const body = JSON.stringify(buildSnapshot({ now: Date.now(), summary, trading, history, chain }));
+    const body = JSON.stringify(await loadSnapshot({ baseUrl: env.PAPERTRADE_API_URL }));
     const response = new Response(body, { headers: { ...JSON_HEADERS, 'cache-control': `public, max-age=${CACHE_SECONDS}` } });
     waitUntil(cache.put(cacheKey, response.clone()));
     return response;

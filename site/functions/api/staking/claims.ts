@@ -2,17 +2,13 @@
  * GET /api/staking/claims?hours=24: USDC claimed by stakers on chain, bucketed per hour.
  * Reads PaperStaking `Claimed` logs. Cached at the edge for 5 minutes.
  */
-import { blockNumber, stakingEvents } from '../../../../src/rpc';
-import { aggregateClaims } from '../../../../src/claims';
+import { loadClaims } from '../../../../src/data';
 
 const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
   'access-control-allow-origin': '*',
   'x-content-type-options': 'nosniff',
 };
-
-/** HyperEVM produces roughly one block per second. */
-const BLOCKS_PER_HOUR = 3600;
 
 export const onRequestGet: PagesFunction = async ({ request, waitUntil }) => {
   const url = new URL(request.url);
@@ -30,9 +26,7 @@ export const onRequestGet: PagesFunction = async ({ request, waitUntil }) => {
   if (hit) return hit;
 
   try {
-    const head = await blockNumber();
-    const events = await stakingEvents({ kinds: ['Claimed'], fromBlock: head - hours * BLOCKS_PER_HOUR, toBlock: head });
-    const body = JSON.stringify(aggregateClaims(events, { nowMs: Date.now(), hours }));
+    const body = JSON.stringify(await loadClaims(hours));
     const response = new Response(body, { headers: { ...JSON_HEADERS, 'cache-control': 'public, max-age=300' } });
     waitUntil(cache.put(cacheKey, response.clone()));
     return response;
