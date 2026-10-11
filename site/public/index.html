@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Papertrade Yield: PAPER staking, realized USDC yield and mint curve</title>
-  <meta name="description" content="Unofficial PAPER staking and yield dashboard for Papertrade. Realized USDC paid to PAPER stakers, the mint curve, your wallet's pending rewards, and wallet-signed stake, unstake and claim.">
+  <meta name="description" content="Unofficial PAPER staking and yield dashboard for Papertrade, with a read-only MCP server for Claude, Codex, ChatGPT, Gemini and Cursor. Realized USDC paid to PAPER stakers, the mint curve, your wallet's rewards, and wallet-signed stake, unstake and claim.">
   <link rel="canonical" href="https://papertrade-yield.pages.dev/">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f4efe3" media="(prefers-color-scheme: light)">
@@ -19,6 +19,9 @@
   <meta name="twitter:description" content="Realized USDC yield for PAPER stakers on Papertrade. Unofficial.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f3a5f'/%3E%3Cpath d='M8 22V10h8a4 4 0 0 1 0 8h-4' fill='none' stroke='%23f4efe3' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/styles.css">
+  <script src="/embed.js"></script>
+  <link rel="alternate" type="application/json" href="/.well-known/mcp/server-card.json" title="MCP server card">
+  <link rel="mcp-server" href="/mcp">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -47,11 +50,14 @@
       <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M8 22V10h8a4 4 0 0 1 0 8h-4"/></svg>
       <span>Papertrade <em>Yield</em></span>
     </a>
-    <nav aria-label="Sections">
+    <nav aria-label="Sections" class="top-nav">
       <a href="#protocol">Protocol</a>
       <a href="#rewards">Rewards</a>
       <a href="#wallet">Wallet</a>
       <a href="#calculator">Calculator</a>
+      <a class="mkt" href="#connect">Connect AI</a>
+      <a class="mkt" href="/docs/">Docs</a>
+      <a class="os-link" href="https://papertrade-os.pages.dev/?open=yield" rel="noopener">Open in Papertrade OS</a>
     </nav>
   </header>
 
@@ -63,7 +69,30 @@
       <div class="hero-stat" id="hero-stat" aria-live="polite">
         <div class="skeleton skeleton-big" aria-hidden="true"></div>
       </div>
+      <p class="cta mkt"><a class="btn btn-primary" href="#connect">Connect your AI</a><a class="btn" href="/docs/">Read the docs</a><a class="btn btn-ghost" href="/mcp">/mcp</a></p>
       <div class="status-line"><span id="data-status" class="chip chip-wait" role="status">Loading live data</span><button id="refresh" class="btn btn-ghost" type="button">Refresh</button></div>
+    </section>
+
+    <section id="features" class="mkt" aria-labelledby="features-title">
+      <div class="section-head">
+        <h2 id="features-title">Built to be read by people and by agents</h2>
+        <p>One data layer behind the dashboard, the JSON API and the MCP tools, so every surface shows the same numbers.</p>
+      </div>
+      <div class="grid features">
+        <article class="card feature"><h3>Realized yield, per million PAPER</h3><p>USDC actually paid to stakers over 24 hours, 7 days and 30 days, quoted per 1M PAPER per day. No forecast and no invented price.</p></article>
+        <article class="card feature"><h3>APR at a price you choose</h3><p>PAPER has no market price, so a percentage needs your assumption. The result is simple, not compounded, and labeled as implied.</p></article>
+        <article class="card feature"><h3>Wallet view</h3><p>PAPER held, PAPER staked, pending rewards read on chain, and lifetime claims. Paste an address or connect a wallet.</p></article>
+        <article class="card feature"><h3>Mint curve and calculator</h3><p>See PAPER minted per dollar of loss today, and project what a loss would mint and earn.</p></article>
+        <article class="card feature"><h3>Wallet-signed actions</h3><p>Stake, unstake and claim go through a confirmation dialog, then your own wallet signs. This site never holds a key.</p></article>
+        <article class="card feature"><h3>Seven read-only MCP tools</h3><p>Stats, APR, history, claims, wallet, projections and unsigned action plans for any MCP client. Nothing signs or sends.</p></article>
+      </div>
+    </section>
+
+    <section id="works-with" class="mkt" aria-labelledby="works-title">
+      <h2 id="works-title" class="strip-title">Works with</h2>
+      <ul class="strip" aria-label="Supported AI clients">
+        <li>Claude</li><li>Codex</li><li>ChatGPT</li><li>Gemini</li><li>Cursor</li><li>VS Code</li><li>Windsurf</li><li>Zed</li><li>Cline</li><li>Goose</li><li>Continue</li>
+      </ul>
     </section>
 
     <section id="protocol" aria-labelledby="protocol-title">
@@ -216,6 +245,80 @@
         <article class="card" aria-live="polite"><dl id="calc-out" class="facts"></dl><p class="muted small" id="calc-note"></p></article>
       </div>
     </section>
+
+    <section id="connect" class="mkt" aria-labelledby="connect-title">
+      <div class="section-head">
+        <h2 id="connect-title">Connect your AI</h2>
+        <p>The MCP server is public, read-only and needs no key. Pick your client and paste. <a href="/docs/connect-your-ai/">All clients and the exact formats are in the docs.</a></p>
+      </div>
+      <div class="tabs" id="connect-tabs">
+        <div class="tabpanel" data-tab="Claude Code">
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>claude mcp add --transport http papertrade-yield https://papertrade-yield.pages.dev/mcp</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="Claude Desktop">
+          <p class="muted small">Settings, Connectors, Add custom connector, then paste the URL. For the stdio bridge, use this in claude_desktop_config.json.</p>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>https://papertrade-yield.pages.dev/mcp</code></pre></div>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>{
+  "mcpServers": {
+    "papertrade-yield": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://papertrade-yield.pages.dev/mcp"]
+    }
+  }
+}</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="Codex">
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>codex mcp add papertrade-yield --url https://papertrade-yield.pages.dev/mcp</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="ChatGPT">
+          <p class="muted small">Enable Developer mode in ChatGPT settings, create a connector, paste this URL and choose no authentication.</p>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>https://papertrade-yield.pages.dev/mcp</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="Gemini CLI">
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>gemini mcp add --transport http papertrade-yield https://papertrade-yield.pages.dev/mcp</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="Cursor">
+          <p class="muted small">Add to .cursor/mcp.json.</p>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>{
+  "mcpServers": {
+    "papertrade-yield": { "url": "https://papertrade-yield.pages.dev/mcp" }
+  }
+}</code></pre></div>
+        </div>
+        <div class="tabpanel" data-tab="VS Code">
+          <p class="muted small">Add to .vscode/mcp.json.</p>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>{
+  "servers": {
+    "papertrade-yield": { "type": "http", "url": "https://papertrade-yield.pages.dev/mcp" }
+  }
+}</code></pre></div>
+        </div>
+      </div>
+      <h3 class="tools-title">Live tools</h3>
+      <p class="muted small">Fetched now from the running <a href="/mcp">/mcp</a> endpoint with tools/list.</p>
+      <div id="tool-list" class="tool-list" aria-live="polite">
+        <div class="skeleton skeleton-row" aria-hidden="true"></div><div class="skeleton skeleton-row" aria-hidden="true"></div><div class="skeleton skeleton-row" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section id="quickstart" class="mkt" aria-labelledby="quick-title">
+      <div class="section-head">
+        <h2 id="quick-title">Quickstart</h2>
+        <p>No account, key or install. Read the data, call the tools, then connect an agent.</p>
+      </div>
+      <div class="split">
+        <article class="card"><h3>Read the yield</h3>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>curl -s https://papertrade-yield.pages.dev/api/staking \
+  | jq '.yield.windows[] | {label, usdPer1MPaperPerDay}'</code></pre></div>
+        </article>
+        <article class="card"><h3>Call an MCP tool</h3>
+          <div class="code"><button class="copy" type="button" aria-label="Copy code to clipboard">Copy</button><pre tabindex="0"><code>curl -s https://papertrade-yield.pages.dev/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"get_apr","arguments":{}}}'</code></pre></div>
+        </article>
+      </div>
+      <p class="muted small">Self-hosting on Cloudflare Pages needs no database or secret. See <a href="/docs/self-hosting/">the guide</a>.</p>
+    </section>
   </main>
 
   <dialog id="confirm" aria-labelledby="confirm-title">
@@ -234,13 +337,17 @@
   <footer>
     <p class="foot-disclaimer"><strong>Unofficial, not affiliated with Papertrade.</strong> High leverage can lose your whole margin. Nothing here is financial advice. Yield shown is realized history, never a promise.</p>
     <p class="foot-links">
-      <a href="/openapi.json">openapi.json</a>
+      <a href="/docs/">Docs</a>
+      <a href="https://github.com/nirholas/papertrade-yield" rel="noopener">GitHub</a>
       <a href="/llms.txt">llms.txt</a>
+      <a href="/mcp">MCP</a>
+      <a href="/openapi.json">openapi.json</a>
+      <a href="/.well-known/mcp/server-card.json">server card</a>
       <a href="/api/staking">/api/staking</a>
-      <a href="https://github.com/nirholas/papertrade-yield">Source</a>
       <a href="https://papertrade.xyz" rel="noopener">papertrade.xyz</a>
+      <a href="https://papertrade-os.pages.dev/?open=yield" rel="noopener">Open in Papertrade OS</a>
     </p>
-    <p class="foot-repos" aria-label="Related repositories">
+    <p class="foot-repos mkt" aria-label="Related repositories">
       <span>Related:</span>
       <a href="https://papertrade-sdk.pages.dev">sdk</a>
       <a href="https://papertrade-ai.pages.dev">ai</a>
@@ -255,5 +362,6 @@
   </footer>
 
   <script type="module" src="/app.js"></script>
+  <script type="module" src="/landing.js"></script>
 </body>
 </html>
