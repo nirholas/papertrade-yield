@@ -5,15 +5,17 @@
 [![HyperEVM](https://img.shields.io/badge/HyperEVM-chain_999-0a8f5b?style=flat-square)](https://papertrade.xyz)
 [![GitHub stars](https://img.shields.io/github/stars/nirholas/papertrade-yield?style=flat-square&color=0a8f5b)](https://github.com/nirholas/papertrade-yield/stargazers)
 [![Last commit](https://img.shields.io/github/last-commit/nirholas/papertrade-yield?style=flat-square&color=0a8f5b)](https://github.com/nirholas/papertrade-yield/commits/main)
+[![MCP](https://img.shields.io/badge/MCP-streamable--http-0a8f5b?style=flat-square)](https://papertrade-yield.pages.dev/docs/mcp/)
+[![Docs](https://img.shields.io/badge/docs-online-0a8f5b?style=flat-square)](https://papertrade-yield.pages.dev/docs/)
 [![Unofficial](https://img.shields.io/badge/community-unofficial-lightgrey?style=flat-square)](#the-papertrade-toolkit)
 
-[Live site](https://papertrade-yield.pages.dev) · [Issues](https://github.com/nirholas/papertrade-yield/issues) · [Discussions](https://github.com/nirholas/papertrade-yield/discussions) · [Papertrade](https://papertrade.xyz) · [Toolkit](#the-papertrade-toolkit)
+[Live site](https://papertrade-yield.pages.dev) · [Docs](https://papertrade-yield.pages.dev/docs/) · [MCP](https://papertrade-yield.pages.dev/mcp) · [Issues](https://github.com/nirholas/papertrade-yield/issues) · [Discussions](https://github.com/nirholas/papertrade-yield/discussions) · [Papertrade](https://papertrade.xyz) · [Toolkit](#the-papertrade-toolkit)
 
 Unofficial PAPER staking and yield dashboard for [Papertrade](https://papertrade.xyz), the fully on-chain 1000x synthetic perps exchange on HyperEVM (chain 999). Not affiliated with Papertrade. High leverage can lose your whole margin.
 
 PAPER is minted to traders who lose. Staked PAPER earns USDC from protocol revenue. This app shows what stakers actually earned, and lets you stake, unstake and claim from your own wallet. Reward distribution into the pool is run by the Papertrade relayer, not by users.
 
-Live site: https://papertrade-yield.pages.dev (after deploy).
+Live site: https://papertrade-yield.pages.dev . Docs: https://papertrade-yield.pages.dev/docs/ . MCP: https://papertrade-yield.pages.dev/mcp
 
 ## What you see
 
@@ -26,6 +28,22 @@ Live site: https://papertrade-yield.pages.dev (after deploy).
 
 Yield figures are realized history, not forecasts. Method: hourly `paperRevenue` divided by mean staked PAPER (trapezoid), pro-rated to the window. The reconstruction is cross-checked against on-chain `accRewardPerShare` (about 3% drift).
 
+## MCP server and AI connectors
+
+A public, read-only MCP server (Streamable HTTP, no key) runs at `https://papertrade-yield.pages.dev/mcp`. Seven tools: `get_staking_stats`, `get_apr`, `get_yield_history`, `get_claims_activity`, `get_wallet_staking`, `project_rewards` and `plan_staking_action` (an unsigned plan only; your wallet signs, never the AI).
+
+```
+claude mcp add --transport http papertrade-yield https://papertrade-yield.pages.dev/mcp
+codex mcp add papertrade-yield --url https://papertrade-yield.pages.dev/mcp
+gemini mcp add --transport http papertrade-yield https://papertrade-yield.pages.dev/mcp
+```
+
+Cursor, VS Code, Windsurf, Zed, Cline, Goose, Continue, Claude Desktop, claude.ai, ChatGPT and the Claude and OpenAI APIs are covered in [Connect your AI](https://papertrade-yield.pages.dev/docs/connect-your-ai/). Discovery files: `/.well-known/mcp/server-card.json`, `/.well-known/agent-card.json`, `/.well-known/api-catalog`, `/openapi.json`, `/llms.txt`, `/llms-full.txt`. Registry metadata is in `server.json` and `glama.json`.
+
+## Docs
+
+Markdown sources are in `docs/` and render to `/docs/` with search, a table of contents and a raw `.md` twin per page. `npm run build:site` builds the app, the docs and every discovery file.
+
 ## Quick start
 
 ```
@@ -35,12 +53,14 @@ npm run typecheck
 npm run dev:site      # http://localhost:8795
 ```
 
-The SDK is installed from `../papertrade-sdk-0.1.0.tgz` until it is on npm.
+The SDK is installed from `github:nirholas/papertrade-sdk`.
 
 ## Architecture
 
-- Browser app `site/app.ts`, bundled by esbuild to `site/public/app.js`.
-- Pages Functions in `site/functions`: `/api/staking` (60 s cache), `/api/staking/claims` (5 min), `/api/staking/wallet` (15 s), `/api/papertrade/*` (same-origin proxy, Papertrade sends no CORS headers), `/openapi.json`.
+- Browser app `site/app.ts` and landing behavior `site/landing.ts`, bundled by esbuild to `site/public`.
+- MCP server: `site/functions/mcp.ts` over `site/functions/_lib/mcp.ts` and `src/mcp-tools.ts`; shared loaders in `src/data.ts`.
+- Docs and discovery files: `docs/*.md` and `scripts/build-docs.mjs`.
+- Pages Functions in `site/functions`: `/api/staking` (60 s cache), `/api/staking/claims` (5 min), `/api/staking/wallet` (15 s), `/api/papertrade/*` (same-origin proxy, Papertrade sends no CORS headers), `/mcp`, `/openapi.json`.
 - Pure logic in `src/` (APR, curve, event decoding, claims aggregation, snapshot), tested against recorded real fixtures.
 - Strict CSP: `default-src 'self'`, so chain reads go through the functions.
 
@@ -60,7 +80,7 @@ No secrets are needed.
 
 ```
 gh repo create nirholas/papertrade-yield --public --source . --push
-npm run build:site && cd site && npx wrangler pages deploy
+npm run build:site && cd site && npx wrangler pages deploy --project-name papertrade-yield --branch main
 ```
 
 ## The Papertrade toolkit

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 - 2026-10-11
+
+- MCP server at `/mcp` (Streamable HTTP, stateless, JSON-RPC 2.0, batches, SSE reply, CORS, per-IP rate limit) with seven read-only tools: `get_staking_stats`, `get_apr`, `get_yield_history`, `get_claims_activity`, `get_wallet_staking`, `project_rewards` and `plan_staking_action` (an unsigned stake, unstake or claim plan only).
+- Shared read-only data loaders in `src/data.ts` now back both the JSON API and the MCP tools.
+- Docs site at `/docs/` with sidebar, table of contents, full-text search, copy buttons, dark and light themes, and a raw markdown twin for every page. Includes a Connect your AI guide for Claude, Codex, ChatGPT, Gemini, Cursor, VS Code, Windsurf, Zed, Cline, Goose and Continue.
+- Agent discovery: MCP server card, A2A agent card, RFC 9727 API catalog, `llms.txt`, `llms-full.txt`, robots with Content-Signal and explicit AI crawler allows, sitemap with docs, `Link` headers on the home page, `server.json` and `glama.json` for MCP registries. The OpenAPI document now describes `/mcp` and the discovery files.
+- Landing page: feature grid, works-with strip, connect-your-AI tabs, live tool list from `/mcp`, quickstart, and a footer with Docs, GitHub, llms.txt and MCP.
+- Embeddable in Papertrade OS: `?embed=1` shows only the product, an Open in Papertrade OS link, and `frame-ancestors` on the app route allows the OS host and `*.pages.dev`.
+- Tests for the MCP plumbing, the tools and the docs and discovery generator.
+
 ## 0.1.0 - 2026-10-10
 
 - Protocol view: PAPER supply, staked and staked share, accRewardPerShare (API and on-chain cross-check), mint rate from the SDK `paperMintRate`, the mint curve with today marked, LP and queue context, minimum stake.
