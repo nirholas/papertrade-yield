@@ -1,0 +1,56 @@
+{
+  "name": "papertrade-yield",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unofficial PAPER staking and yield dashboard for Papertrade (papertrade.xyz): protocol view, mint curve, realized USDC reward history from PaperStaking events, wallet view and wallet-signed stake, unstake, claim and distribute actions.",
+  "license": "MIT",
+  "author": "nirholas",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit && tsc --noEmit -p site/functions",
+    "test": "vitest run",
+    "verify:signing": "node scripts/verify-signing.mjs",
+    "build:site": "esbuild site/app.ts --bundle --format=esm --minify --target=es2022 --sourcemap --outfile=site/public/app.js",
+    "dev:site": "npm run build:site && cd site && wrangler pages dev --port 8795",
+    "deploy:site": "npm run build:site && cd site && wrangler pages deploy"
+  },
+  "keywords": [
+    "papertrade",
+    "paper",
+    "staking",
+    "yield",
+    "apr",
+    "hyperevm",
+    "hyperliquid",
+    "usdc",
+    "defi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirholas/papertrade-yield.git"
+  },
+  "homepage": "https://github.com/nirholas/papertrade-yield#readme",
+  "bugs": {
+    "url": "https://github.com/nirholas/papertrade-yield/issues"
+  },
+  "dependencies": {
+    "lightweight-charts": "^5.2.1",
+    "papertrade-sdk": "file:../papertrade-sdk-0.1.0.tgz",
+    "viem": "^2.57.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261010.1",
+    "@types/node": "^26.6.5",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3",
+    "wrangler": "^4.149.0"
+  },
+  "allowScripts": {
+    "workerd@1.20261006.1": true,
+    "esbuild@0.28.2": true
+  }
+}

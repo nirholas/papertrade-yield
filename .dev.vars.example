@@ -1,0 +1,3 @@
+# Optional. The only variable the app reads. Copy to site/.dev.vars for local `wrangler pages dev`.
+# Production sets it in site/wrangler.toml [vars]. No secrets are required.
+PAPERTRADE_API_URL=https://exchange.papertrade.xyz

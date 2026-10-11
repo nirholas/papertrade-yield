@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Papertrade Yield: PAPER staking, realized USDC yield and mint curve</title>
+  <meta name="description" content="Unofficial PAPER staking and yield dashboard for Papertrade. Realized USDC paid to PAPER stakers, the mint curve, your wallet's pending rewards, and wallet-signed stake, unstake and claim.">
+  <link rel="canonical" href="https://papertrade-yield.pages.dev/">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4efe3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Papertrade Yield">
+  <meta property="og:title" content="Papertrade Yield: PAPER staking and realized USDC yield">
+  <meta property="og:description" content="What PAPER stakers actually earned, from real Papertrade data. Unofficial. High leverage can lose your whole margin.">
+  <meta property="og:url" content="https://papertrade-yield.pages.dev/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Papertrade Yield">
+  <meta name="twitter:description" content="Realized USDC yield for PAPER stakers on Papertrade. Unofficial.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f3a5f'/%3E%3Cpath d='M8 22V10h8a4 4 0 0 1 0 8h-4' fill='none' stroke='%23f4efe3' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Papertrade Yield",
+    "url": "https://papertrade-yield.pages.dev/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "description": "Unofficial PAPER staking and yield dashboard for Papertrade: realized USDC reward history, mint curve, wallet view and wallet-signed staking actions.",
+    "isAccessibleForFree": true,
+    "license": "https://opensource.org/licenses/MIT",
+    "codeRepository": "https://github.com/nirholas/papertrade-yield",
+    "author": { "@type": "Person", "name": "nirholas", "url": "https://github.com/nirholas" }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <div class="disclaimer" role="note">
+    <strong>Unofficial, not affiliated with Papertrade.</strong> High leverage can lose your whole margin. Not financial advice.
+  </div>
+
+  <header class="top">
+    <a class="brand" href="/" aria-label="Papertrade Yield, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M8 22V10h8a4 4 0 0 1 0 8h-4"/></svg>
+      <span>Papertrade <em>Yield</em></span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#protocol">Protocol</a>
+      <a href="#rewards">Rewards</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#calculator">Calculator</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">PAPER staking, measured</p>
+      <h1 id="hero-title">What PAPER stakers actually earn</h1>
+      <p class="lede">PAPER is minted to losing traders and staked for USDC. This page reconstructs the USDC paid to stakers from Papertrade's own history and quotes it honestly: realized, not forecast, and per million PAPER because PAPER has no price.</p>
+      <div class="hero-stat" id="hero-stat" aria-live="polite">
+        <div class="skeleton skeleton-big" aria-hidden="true"></div>
+      </div>
+      <div class="status-line"><span id="data-status" class="chip chip-wait" role="status">Loading live data</span><button id="refresh" class="btn btn-ghost" type="button">Refresh</button></div>
+    </section>
+
+    <section id="protocol" aria-labelledby="protocol-title">
+      <div class="section-head">
+        <h2 id="protocol-title">Protocol</h2>
+        <p>Live from the Papertrade API, cross-checked against the PaperStaking contract on HyperEVM.</p>
+      </div>
+      <div id="protocol-grid" class="grid stats" aria-live="polite">
+        <div class="skeleton skeleton-card" aria-hidden="true"></div><div class="skeleton skeleton-card" aria-hidden="true"></div><div class="skeleton skeleton-card" aria-hidden="true"></div><div class="skeleton skeleton-card" aria-hidden="true"></div>
+      </div>
+
+      <div class="split">
+        <article class="card" aria-labelledby="mint-title">
+          <h3 id="mint-title">PAPER mint curve</h3>
+          <p class="muted" id="mint-lede">PAPER minted per $1 of loss basis, against tail progress.</p>
+          <div id="mint-chart" class="svg-chart" role="img" aria-label="Mint rate against tail progress"></div>
+          <dl id="mint-facts" class="facts"></dl>
+        </article>
+        <article class="card" aria-labelledby="lp-title">
+          <h3 id="lp-title">Liquidity and queue</h3>
+          <p class="muted">The mint curve reads the tracked LP. The queue holds winnings that cannot yet be paid.</p>
+          <dl id="lp-facts" class="facts"></dl>
+        </article>
+      </div>
+    </section>
+
+    <section id="rewards" aria-labelledby="rewards-title">
+      <div class="section-head">
+        <h2 id="rewards-title">Reward history and yield</h2>
+        <p>USDC distributed to stakers per hour, and what that means per PAPER.</p>
+      </div>
+      <div class="split split-wide">
+        <article class="card">
+          <h3>USDC to stakers per hour</h3>
+          <div id="rewards-chart" class="lw-chart" role="img" aria-label="Hourly USDC distributed to PAPER stakers"></div>
+          <p class="muted small" id="rewards-caption"></p>
+        </article>
+        <article class="card">
+          <h3>Realized yield windows</h3>
+          <div class="table-wrap">
+            <table id="windows-table">
+              <caption class="sr-only">Realized yield per window</caption>
+              <thead><tr><th scope="col">Window</th><th scope="col">Covered</th><th scope="col">USDC paid</th><th scope="col">USDC per 1M PAPER per day</th></tr></thead>
+              <tbody id="windows-body"><tr><td colspan="4"><div class="skeleton skeleton-row" aria-hidden="true"></div></td></tr></tbody>
+            </table>
+          </div>
+          <details class="method" open>
+            <summary>How this is computed</summary>
+            <p id="method-text"></p>
+            <p id="pricing-text"></p>
+            <p id="recon-text" class="small muted"></p>
+          </details>
+        </article>
+      </div>
+
+      <div class="split">
+        <article class="card" aria-labelledby="apr-title">
+          <h3 id="apr-title">Implied APR at an assumed price</h3>
+          <p class="muted">PAPER has no market price, so there is no true APR. Enter a price you want to test.</p>
+          <div class="field-row">
+            <label for="apr-price">Assumed PAPER price (USD)</label>
+            <input id="apr-price" type="text" inputmode="decimal" autocomplete="off" placeholder="0.001">
+          </div>
+          <dl id="apr-out" class="facts"></dl>
+        </article>
+        <article class="card" aria-labelledby="claims-title">
+          <h3 id="claims-title">Claimed on chain, last 24 hours</h3>
+          <div id="claims-body" aria-live="polite"><div class="skeleton skeleton-row" aria-hidden="true"></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="wallet" aria-labelledby="wallet-title">
+      <div class="section-head">
+        <h2 id="wallet-title">Your wallet</h2>
+        <p>Connect to stake, or paste any address to look without signing. This page never holds a key: your wallet signs, then the relayer receives the signed intent.</p>
+      </div>
+      <div class="card wallet-connect">
+        <div id="wallet-providers" class="providers" aria-live="polite"></div>
+        <form id="watch-form" class="watch" novalidate>
+          <label for="watch-input">Or look up an address (read only)</label>
+          <div class="field-row">
+            <input id="watch-input" type="text" autocomplete="off" spellcheck="false" placeholder="0x..." aria-describedby="watch-error">
+            <button class="btn" type="submit">Look up</button>
+          </div>
+          <p id="watch-error" class="error-text" role="alert" hidden></p>
+        </form>
+        <p id="wallet-state" class="chip chip-idle" role="status">No wallet selected</p>
+      </div>
+
+      <div id="wallet-empty" class="empty">
+        <h3>Nothing to show yet</h3>
+        <p>Connect a wallet or paste an address to see PAPER held, staked, pending rewards and lifetime claimed.</p>
+      </div>
+      <div id="wallet-view" hidden>
+        <div id="wallet-grid" class="grid stats"></div>
+        <div class="split">
+          <article class="card" aria-labelledby="actions-title">
+            <h3 id="actions-title">Actions</h3>
+            <p class="muted" id="actions-note"></p>
+            <div class="actions">
+              <form class="action" data-action="stake" novalidate>
+                <label for="stake-amount">Stake PAPER</label>
+                <div class="field-row"><input id="stake-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button type="button" class="btn btn-ghost" data-max="stake">Max</button></div>
+                <p class="error-text" role="alert" hidden></p>
+                <button class="btn btn-primary" type="submit">Prepare stake</button>
+              </form>
+              <form class="action" data-action="unstake" novalidate>
+                <label for="unstake-amount">Unstake PAPER</label>
+                <div class="field-row"><input id="unstake-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.0"><button type="button" class="btn btn-ghost" data-max="unstake">Max</button></div>
+                <p class="error-text" role="alert" hidden></p>
+                <button class="btn btn-primary" type="submit">Prepare unstake</button>
+              </form>
+              <form class="action" data-action="claim" novalidate>
+                <p class="label">Claim USDC rewards</p>
+                <p class="muted small">Pays your pending USDC to your Papertrade balance.</p>
+                <p class="error-text" role="alert" hidden></p>
+                <button class="btn btn-primary" type="submit">Prepare claim</button>
+              </form>
+            </div>
+          </article>
+          <article class="card" aria-labelledby="intents-title">
+            <h3 id="intents-title">Intent status</h3>
+            <div id="intent-list" aria-live="polite">
+              <p class="muted">Intents you submit appear here and update from the live stream.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="calculator" aria-labelledby="calc-title">
+      <div class="section-head">
+        <h2 id="calc-title">Loss to PAPER calculator</h2>
+        <p>Every losing trade mints PAPER at the current curve. Stake it and it earns USDC. See what a hypothetical loss turns into.</p>
+      </div>
+      <div class="split">
+        <form id="calc-form" class="card" novalidate>
+          <div class="field-row">
+            <label for="calc-loss">Loss (USD)</label>
+            <input id="calc-loss" type="text" inputmode="decimal" autocomplete="off" value="1000">
+          </div>
+          <fieldset class="seg">
+            <legend>How the position ended</legend>
+            <label><input type="radio" name="calc-kind" value="close" checked><span>Closed at a loss</span></label>
+            <label><input type="radio" name="calc-kind" value="liq"><span>Liquidated</span></label>
+          </fieldset>
+          <p class="error-text" id="calc-error" role="alert" hidden></p>
+        </form>
+        <article class="card" aria-live="polite"><dl id="calc-out" class="facts"></dl><p class="muted small" id="calc-note"></p></article>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirm" aria-labelledby="confirm-title">
+    <form method="dialog" class="dialog-body" id="confirm-form">
+      <h2 id="confirm-title">Confirm</h2>
+      <p class="muted" id="confirm-lede"></p>
+      <dl id="confirm-facts" class="facts"></dl>
+      <p id="confirm-error" class="error-text" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" value="cancel" id="confirm-cancel" type="submit">Cancel</button>
+        <button class="btn btn-primary" id="confirm-go" type="button">Sign in wallet and submit</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>
+    <p class="foot-disclaimer"><strong>Unofficial, not affiliated with Papertrade.</strong> High leverage can lose your whole margin. Nothing here is financial advice. Yield shown is realized history, never a promise.</p>
+    <p class="foot-links">
+      <a href="/openapi.json">openapi.json</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/api/staking">/api/staking</a>
+      <a href="https://github.com/nirholas/papertrade-yield">Source</a>
+      <a href="https://papertrade.xyz" rel="noopener">papertrade.xyz</a>
+    </p>
+    <p class="foot-repos" aria-label="Related repositories">
+      <span>Related:</span>
+      <a href="https://papertrade-sdk.pages.dev">sdk</a>
+      <a href="https://papertrade-ai.pages.dev">ai</a>
+      <a href="https://papertrade-terminal.pages.dev">terminal</a>
+      <a href="https://papertrade-analytics.pages.dev">analytics</a>
+      <a href="https://papertrade-explorer.pages.dev">explorer</a>
+      <a href="https://papertrade-x402.pages.dev">x402</a>
+      <a href="https://papertrade-liquidations.pages.dev">liquidations</a>
+      <a href="https://github.com/nirholas/papertrade-alerts">alerts</a>
+      <a href="https://papertrade-copytrade.pages.dev">copytrade</a>
+    </p>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
