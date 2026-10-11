@@ -7,3 +7,12 @@ dist
 site/public/app.js
 site/public/app.js.map
 site/public/app.js.*
+site/public/landing.js
+site/public/landing.js.map
+site/public/docs/
+site/public/llms-full.txt
+site/public/.well-known/mcp.json
+site/public/.well-known/mcp/
+site/public/.well-known/agent-card.json
+site/public/.well-known/agent.json
+site/public/.well-known/api-catalog

@@ -1,20 +1,41 @@
 # papertrade-yield
 
-> Unofficial PAPER staking and yield dashboard for Papertrade (papertrade.xyz), the on-chain 1000x synthetic perps exchange on HyperEVM. Not affiliated with Papertrade. High leverage can lose your whole margin.
+> Unofficial, not affiliated with Papertrade. High leverage can lose your whole margin. Not financial advice. Unofficial PAPER staking and yield dashboard, JSON API and read-only MCP server for Papertrade (papertrade.xyz), the on-chain synthetic perps exchange on HyperEVM.
 
-PAPER is minted to losing traders and staked in the PaperStaking contract for USDC. This app shows the protocol state, the realized USDC paid to stakers, the mint curve, a wallet view, and wallet-signed Stake, Unstake and Claim (reward distribution is run by the relayer). Yield is quoted as USDC per 1M PAPER per day because PAPER has no market price; a percentage APR needs an assumed price.
+PAPER is minted to losing traders and staked in the PaperStaking contract for USDC. Yield is quoted as realized USDC per 1M PAPER per day because PAPER has no market price; a percentage APR needs a price you assume. Nothing here signs or sends anything: the MCP tool plan_staking_action returns an unsigned plan only.
 
-## Site and API (https://papertrade-yield.pages.dev)
+## Docs (markdown)
 
-- [App](https://papertrade-yield.pages.dev/): dashboard.
-- [/api/staking](https://papertrade-yield.pages.dev/api/staking): cached JSON (60 s) with protocol state, mint curve, LP context and realized yield windows.
-- [/api/staking/claims?hours=24](https://papertrade-yield.pages.dev/api/staking/claims?hours=24): USDC claimed on chain per hour (1 to 72 hours, cached 5 min).
+- [Overview](https://papertrade-yield.pages.dev/docs/index.md): What Papertrade Yield is, what it reads, and the three ways to use it: the web app, the JSON API and the MCP server.
+- [Quickstart](https://papertrade-yield.pages.dev/docs/quickstart.md): Read PAPER staking yield, call the MCP server and connect an AI client in a few minutes.
+- [Concepts](https://papertrade-yield.pages.dev/docs/concepts.md): The Papertrade and PaperStaking rules that decide what the numbers mean: PAPER minting, realized yield, APR and units.
+- [API, CLI and SDK reference](https://papertrade-yield.pages.dev/docs/reference.md): The HTTP endpoints, response fields, caching and error codes, plus how to use the Papertrade SDK for protocol math.
+- [MCP server](https://papertrade-yield.pages.dev/docs/mcp.md): The read-only Model Context Protocol server at /mcp: endpoint, transport behavior, tools with schemas and worked examples.
+- [Connect your AI](https://papertrade-yield.pages.dev/docs/connect-your-ai.md): Copy-paste setup for Claude Code, Claude Desktop, claude.ai, the Claude API, Codex, the OpenAI Responses API, ChatGPT, Gemini CLI, Cursor, VS Code, Windsurf, Zed, Cline, Goose and Continue.
+- [Agent discovery](https://papertrade-yield.pages.dev/docs/agent-discovery.md): Every machine-readable file this site serves so agents and crawlers can find the MCP server, the API and the docs.
+- [Self-hosting on Cloudflare](https://papertrade-yield.pages.dev/docs/self-hosting.md): Run your own copy of Papertrade Yield on Cloudflare Pages with Pages Functions, no database and no secrets.
+- [Security and limits](https://papertrade-yield.pages.dev/docs/security.md): What this project can and cannot do with money, how untrusted data is handled, rate limits, caching and headers.
+- [FAQ](https://papertrade-yield.pages.dev/docs/faq.md): Short answers about yield units, APR, wallets, data sources, the MCP server and safety.
+- [Changelog](https://papertrade-yield.pages.dev/docs/changelog.md): Release history for Papertrade Yield.
+
+## Connect
+
+- MCP endpoint (Streamable HTTP, no auth): https://papertrade-yield.pages.dev/mcp
+- [MCP server card](https://papertrade-yield.pages.dev/.well-known/mcp/server-card.json)
+- [A2A agent card](https://papertrade-yield.pages.dev/.well-known/agent-card.json)
+- [API catalog](https://papertrade-yield.pages.dev/.well-known/api-catalog)
+- [OpenAPI 3.1](https://papertrade-yield.pages.dev/openapi.json)
+- [Full docs in one file](https://papertrade-yield.pages.dev/llms-full.txt)
+
+## HTTP API
+
+- [/api/staking](https://papertrade-yield.pages.dev/api/staking): protocol state, mint curve, LP context and realized yield windows (cached 60 s).
+- [/api/staking/claims?hours=24](https://papertrade-yield.pages.dev/api/staking/claims?hours=24): USDC claimed on chain per hour (1 to 72 hours).
 - [/api/staking/wallet?address=0x...](https://papertrade-yield.pages.dev/api/staking/wallet): on-chain pendingReward and PAPER balance for a wallet.
-- [/openapi.json](https://papertrade-yield.pages.dev/openapi.json): OpenAPI 3.1 description of the above.
 
 ## Code
 
-- [Source](https://github.com/nirholas/papertrade-yield): TypeScript, Cloudflare Pages Functions, esbuild, vitest.
+- [Source](https://github.com/nirholas/papertrade-yield): TypeScript, Cloudflare Pages Functions, esbuild, vitest. Apache-2.0.
 - [AGENTS.md](https://github.com/nirholas/papertrade-yield/blob/main/AGENTS.md): commands, correctness rules and safety rules for agents.
 
 ## Rules for agents

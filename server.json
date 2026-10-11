@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.nirholas/papertrade-yield",
+  "title": "Papertrade Yield (unofficial)",
+  "description": "Read-only PAPER staking and yield data for Papertrade: realized USDC yield, APR at an assumed price, rewards history, wallet stake and unsigned stake, unstake and claim plans.",
+  "version": "0.2.0",
+  "websiteUrl": "https://papertrade-yield.pages.dev/docs/",
+  "repository": {
+    "url": "https://github.com/nirholas/papertrade-yield",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://papertrade-yield.pages.dev/mcp"
+    }
+  ]
+}

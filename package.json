@@ -1,6 +1,6 @@
 {
   "name": "papertrade-yield",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Unofficial PAPER staking and yield dashboard for Papertrade (papertrade.xyz): protocol view, mint curve, realized USDC reward history from PaperStaking events, wallet view and wallet-signed stake, unstake, claim and distribute actions.",
   "license": "Apache-2.0",
@@ -13,9 +13,11 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p site/functions",
     "test": "vitest run",
     "verify:signing": "node scripts/verify-signing.mjs",
-    "build:site": "esbuild site/app.ts --bundle --format=esm --minify --target=es2022 --sourcemap --outfile=site/public/app.js",
+    "build:site": "npm run build:app && npm run build:docs",
     "dev:site": "npm run build:site && cd site && wrangler pages dev --port 8795",
-    "deploy:site": "npm run build:site && cd site && wrangler pages deploy"
+    "deploy:site": "npm run build:site && cd site && wrangler pages deploy",
+    "build:app": "esbuild site/app.ts site/landing.ts --bundle --format=esm --minify --target=es2022 --sourcemap --outdir=site/public",
+    "build:docs": "node scripts/build-docs.mjs"
   },
   "keywords": [
     "papertrade",
@@ -35,7 +37,17 @@
     "typescript",
     "crypto",
     "web3",
-    "passive-income"
+    "passive-income",
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "ai-agents",
+    "llms-txt",
+    "claude",
+    "codex",
+    "chatgpt",
+    "gemini",
+    "cursor"
   ],
   "repository": {
     "type": "git",
@@ -54,6 +66,7 @@
     "@cloudflare/workers-types": "^5.20261010.1",
     "@types/node": "^26.6.5",
     "esbuild": "^0.28.2",
+    "marked": "^18.1.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.3",
     "wrangler": "^4.149.0"
@@ -61,5 +74,6 @@
   "allowScripts": {
     "workerd@1.20261006.1": true,
     "esbuild@0.28.2": true
-  }
+  },
+  "mcpName": "io.github.nirholas/papertrade-yield"
 }
