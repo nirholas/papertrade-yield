@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "papertrade-yield": {
+      "type": "http",
+      "url": "https://papertrade-yield.pages.dev/mcp"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "papertrade-yield",
+  "owner": {
+    "name": "nirholas"
+  },
+  "description": "Papertrade PAPER staking stats, realized USDC yield, reward projections and unsigned staking plans via a read-only MCP server.",
+  "plugins": [
+    {
+      "name": "papertrade-yield",
+      "source": "./",
+      "description": "Papertrade PAPER staking stats, realized USDC yield, reward projections and unsigned staking plans via a read-only MCP server.",
+      "tags": [
+        "mcp",
+        "staking",
+        "yield",
+        "hyperevm"
+      ]
+    }
+  ]
+}
