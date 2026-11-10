@@ -7,8 +7,9 @@
   "plugins": [
     {
       "name": "papertrade-yield",
-      "source": "./",
+      "source": "./plugins/papertrade-yield",
       "description": "Papertrade PAPER staking stats, realized USDC yield, reward projections and unsigned staking plans via a read-only MCP server.",
+      "category": "development",
       "tags": [
         "mcp",
         "staking",
